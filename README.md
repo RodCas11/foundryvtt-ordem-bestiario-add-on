@@ -1,6 +1,14 @@
 ﻿# ordem-bestiario
 
-Modulo/add-on de compendio de ameacas para Foundry VTT v14 no sistema `ordemparanormal`.
+Modulo/add-on de compendio de ameacas para Foundry VTT v14 no sistema ordemparanormal.
+
+
+## Contribuição
+
+- A branch de desenvolvimento para contribuições é dev.
+- Para contribuir, crie seu PR com destino para dev.
+- Link direto da branch: https://github.com/RodCas11/foundryvtt-ordem-bestiario-add-on/tree/dev
+
 
 ## Importante
 
@@ -132,3 +140,6 @@ Ela não altera o Actor original do compêndio.
 - Use essa tabela no início do turno do Anfitrião durante o Ato 2.
 - Role uma vez para cada ser em alcance longo.
 - Os efeitos iguais são cumulativos.
+
+
+
