@@ -1,134 +1,91 @@
-﻿# ordem-bestiario
+﻿# Bestiario Ordem Paranormal (Dev)
 
-Modulo/add-on de compendio de ameacas para Foundry VTT v14 no sistema `ordemparanormal`.
+Add-on para Foundry VTT v14 com compêndios para o sistema `ordemparanormal`.
 
-## Importante
+Dependência obrigatória do sistema:
+- https://github.com/SouOWendel/ordemparanormal_fvtt
 
-As macros `scripts/import-actors-to-compendium.macro.js` e `scripts/clear-and-import-actors-to-compendium.macro.js` sao ferramentas de desenvolvimento.
+## Branches
 
-Elas servem apenas para popular o compendio local durante a criacao do modulo.
+- `main`: publicação estável
+- `dev`: integração de contribuições
 
-O usuario final nao precisa rodar macro, nao precisa colar JSON e nao precisa importar actors manualmente.
+Abra PRs para `dev`.
 
-A versao final do modulo deve incluir `packs/ameacas` preenchido.
+## Estrutura do add-on
+
+- `module.json`
+- `packs/ameacas` (Actor)
+- `packs/macros` (Macro)
+- `packs/tabelas` (RollTable)
+- `assets/tokens-normalized`
+- `tools/` (scripts/macros de desenvolvimento)
+
+## Pré-requisitos para contribuir
+
+- Foundry VTT v14 instalado
+- Sistema `ordemparanormal` instalado no Foundry
+- PowerShell (Windows)
+- Node.js
 
 ## Fluxo de desenvolvimento
 
-1. Gerar actors:
+1. Trabalhe na branch `dev`.
+2. Edite dados/fontes e scripts em `tools/` quando necessário.
+3. Copie módulo para Foundry:
 
 ```powershell
-cd "D:\bestiario-ordem-paranormal\ordem-bestiario"
-
-node .\scripts\merge-manual-creatures.js
-node .\scripts\validate-creatures.js
-node .\scripts\build-ameacas.js --only-exportable
+powershell -ExecutionPolicy Bypass -File ".\tools\prepare-module-copy.ps1"
 ```
 
-2. Copiar modulo para o Foundry:
+4. Abra Foundry, ative o módulo e atualize os compêndios (ameaças/macros/tabelas).
+5. Feche Foundry.
+6. Sincronize os packs de volta para o repositório:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-module-copy.ps1"
+powershell -ExecutionPolicy Bypass -File ".\tools\sync-packs-from-foundry.ps1"
 ```
 
-3. Abrir Foundry, ativar o modulo e rodar macro de importacao para popular o compendio.
+## Scripts úteis (`tools/`)
 
-4. Depois que o compendio estiver populado, fechar o Foundry.
+- `build-ameacas.js`: gera `foundry-actors.json`
+- `validate-creatures.js`: valida criaturas normalizadas
+- `validate-foundry-actors.js`: valida saída final para Foundry
+- `create-rolltables.macro.js`: cria/atualiza tabela "Roleta Maluca do Anfitrião"
+- `trocar-forma-criatura.macro.js`: macro genérica de troca de forma por `tokenVariants`
+- `prepare-release.ps1`: monta release local
+- `validate-release.ps1`: valida estrutura da release
 
-5. Copiar a pasta `packs/ameacas` preenchida de volta do `Data/modules` para o projeto:
+## Regra para compêndios
+
+- Não editar arquivos LevelDB de `packs/*` manualmente.
+- Sempre alterar compêndio dentro do Foundry e depois sincronizar com `sync-packs-from-foundry.ps1`.
+
+## Checklist antes de PR
+
+1. `module.json` válido e com packs corretos (`ameacas`, `macros`, `tabelas`).
+2. Compêndios sincronizados a partir do Foundry (se houve mudanças neles).
+3. README/CONTRIBUTING atualizados, se necessário.
+4. Sem arquivos temporários ou lixo no commit.
+
+## Fluxo de release (maintainers)
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\sync-pack-from-foundry.ps1"
+powershell -ExecutionPolicy Bypass -File ".\tools\prepare-release.ps1"
+powershell -ExecutionPolicy Bypass -File ".\tools\validate-release.ps1"
 ```
 
-## Fluxo de release
+## Recursos de jogo incluídos
 
-Depois que `packs/ameacas` estiver preenchido, gerar pacote final do modulo contendo:
+### Macro: Trocar Forma da Criatura
 
-- `module.json`
-- `packs/ameacas`
-- `assets/tokens`
-- `README.md`
+- Compêndio: `Macros - Bestiario Ordem Paranormal`
+- Funciona para qualquer Actor com `flags["ordem-bestiario"].tokenVariants`
+- Altera apenas o token selecionado na cena
 
-O usuario final so instala/ativa o modulo. Nao roda macro.
+### Tabela: Roleta Maluca do Anfitrião
 
-## Comandos finais
-
-## Gerar dados
-
-```powershell
-cd "D:\bestiario-ordem-paranormal\ordem-bestiario"
-
-node .\scripts\merge-manual-creatures.js
-node .\scripts\validate-creatures.js
-node .\scripts\build-ameacas.js --only-exportable
-```
-
-## Copiar modulo para Foundry para desenvolvimento
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-module-copy.ps1"
-```
-
-Depois:
-
-- abrir Foundry
-- ativar modulo
-- rodar `clear-and-import-actors-to-compendium.macro.js`
-- confirmar que o compendio esta preenchido
-- fechar Foundry
-
-## Sincronizar pack populado de volta para o projeto
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\sync-pack-from-foundry.ps1"
-```
-
-## Preparar release final
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-release.ps1"
-```
-
-## Validar release
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\validate-release.ps1"
-```
-
-## Anfitrião e tokens alternativos
-
-- O Anfitrião é importado como um único Actor.
-- As facetas ficam cadastradas em `flags["ordem-bestiario"].tokenVariants`.
-- Para trocar a forma visual em cena, selecione o token de uma criatura com variantes e execute a macro `scripts/trocar-forma-criatura.macro.js`.
-- A macro altera somente o token colocado na cena, não o Actor original do compendium.
-
-## Macro: Trocar Forma da Criatura
-
-O módulo inclui um compêndio de macros chamado:
-
-- `Macros - Bestiario Ordem Paranormal`
-
-Dentro dele existe a macro:
-
-- `Trocar Forma da Criatura`
-
-Como usar:
-
-1. Ative o módulo no mundo.
-2. Abra o compêndio `Macros - Bestiario Ordem Paranormal`.
-3. Arraste a macro `Trocar Forma da Criatura` para a hotbar.
-4. Arraste uma criatura com formas alternativas para a cena (ex.: Anfitrião, Degolificada).
-5. Selecione exatamente 1 token dessa criatura.
-6. Execute a macro.
-7. Escolha a forma desejada (lista dinâmica baseada em `tokenVariants` da criatura).
-
-A macro altera apenas o token selecionado na cena.
-Ela não altera o Actor original do compêndio.
-
-## Tabela: Roleta Maluca do Anfitrião
-
-- O módulo inclui um compêndio de tabelas chamado `Tabelas - Bestiario Ordem Paranormal`.
-- Dentro dele existe a tabela `Roleta Maluca do Anfitrião`.
-- Use essa tabela no início do turno do Anfitrião durante o Ato 2.
-- Role uma vez para cada ser em alcance longo.
-- Os efeitos iguais são cumulativos.
+- Compêndio: `Tabelas - Bestiario Ordem Paranormal`
+- Use no início do turno do Anfitrião (Ato 2)
+- Role 1 vez por ser em alcance longo
+- Efeitos iguais são cumulativos
