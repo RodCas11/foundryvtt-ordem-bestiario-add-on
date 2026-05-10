@@ -1,0 +1,42 @@
+{
+  "id": "ordem-bestiario",
+  "title": "Bestiario Ordem Paranormal",
+  "description": "Compendio de ameacas para o sistema Ordem Paranormal no Foundry VTT.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Rodrigo Cassiano"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "ordemparanormal",
+        "type": "system"
+      }
+    ]
+  },
+  "packs": [
+    {
+      "name": "ameacas",
+      "label": "Ameacas - Ordem Paranormal",
+      "path": "packs/ameacas",
+      "type": "Actor",
+      "system": "ordemparanormal",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "macros",
+      "label": "Macros - Bestiario Ordem Paranormal",
+      "path": "packs/macros",
+      "type": "Macro"
+    }
+  ]
+}
