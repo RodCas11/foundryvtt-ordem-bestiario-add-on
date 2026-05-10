@@ -1,126 +1,60 @@
-﻿# ordem-bestiario
+﻿# Bestiario Ordem Paranormal
 
-Modulo/add-on de compendio de ameacas para Foundry VTT v14 no sistema `ordemparanormal`.
+Add-on para Foundry VTT (v14) com compêndio de ameaças para o sistema `ordemparanormal`.
 
-## Importante
+## Conteúdo do módulo
 
-As macros `scripts/import-actors-to-compendium.macro.js` e `scripts/clear-and-import-actors-to-compendium.macro.js` sao ferramentas de desenvolvimento.
+Este add-on já inclui os compêndios prontos:
 
-Elas servem apenas para popular o compendio local durante a criacao do modulo.
+- `Ameacas - Ordem Paranormal` (`Actor`)
+- `Macros - Bestiario Ordem Paranormal` (`Macro`)
 
-O usuario final nao precisa rodar macro, nao precisa colar JSON e nao precisa importar actors manualmente.
+Também inclui os tokens em:
 
-A versao final do modulo deve incluir `packs/ameacas` preenchido.
+- `assets/tokens-normalized`
 
-## Fluxo de desenvolvimento
+## Requisitos
 
-1. Gerar actors:
+- Foundry VTT v14
+- Sistema `ordemparanormal`
 
-```powershell
-cd "D:\bestiario-ordem-paranormal\ordem-bestiario"
+## Instalação
 
-node .\scripts\merge-manual-creatures.js
-node .\scripts\validate-creatures.js
-node .\scripts\build-ameacas.js --only-exportable
-```
+1. Copie a pasta do módulo para o diretório `Data/modules` do Foundry.
+2. Inicie o Foundry.
+3. Ative o módulo no seu mundo.
 
-2. Copiar modulo para o Foundry:
+## Uso dos compêndios
 
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-module-copy.ps1"
-```
-
-3. Abrir Foundry, ativar o modulo e rodar macro de importacao para popular o compendio.
-
-4. Depois que o compendio estiver populado, fechar o Foundry.
-
-5. Copiar a pasta `packs/ameacas` preenchida de volta do `Data/modules` para o projeto:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\sync-pack-from-foundry.ps1"
-```
-
-## Fluxo de release
-
-Depois que `packs/ameacas` estiver preenchido, gerar pacote final do modulo contendo:
-
-- `module.json`
-- `packs/ameacas`
-- `assets/tokens`
-- `README.md`
-
-O usuario final so instala/ativa o modulo. Nao roda macro.
-
-## Comandos finais
-
-## Gerar dados
-
-```powershell
-cd "D:\bestiario-ordem-paranormal\ordem-bestiario"
-
-node .\scripts\merge-manual-creatures.js
-node .\scripts\validate-creatures.js
-node .\scripts\build-ameacas.js --only-exportable
-```
-
-## Copiar modulo para Foundry para desenvolvimento
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-module-copy.ps1"
-```
-
-Depois:
-
-- abrir Foundry
-- ativar modulo
-- rodar `clear-and-import-actors-to-compendium.macro.js`
-- confirmar que o compendio esta preenchido
-- fechar Foundry
-
-## Sincronizar pack populado de volta para o projeto
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\sync-pack-from-foundry.ps1"
-```
-
-## Preparar release final
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-release.ps1"
-```
-
-## Validar release
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\validate-release.ps1"
-```
-
-## Anfitrião e tokens alternativos
-
-- O Anfitrião é importado como um único Actor.
-- As facetas ficam cadastradas em `flags["ordem-bestiario"].tokenVariants`.
-- Para trocar a forma visual em cena, selecione o token do Anfitrião e execute a macro `scripts/trocar-forma-anfitriao.macro.js`.
-- A macro altera somente o token colocado na cena, não o Actor original do compendium.
+1. Abra `Compendiums`.
+2. Em `Ameacas - Ordem Paranormal`, arraste os atores desejados para a cena.
+3. Em `Macros - Bestiario Ordem Paranormal`, use as macros disponíveis.
 
 ## Macro: Trocar Forma do Anfitrião
 
-O módulo inclui um compêndio de macros chamado:
+A macro `Trocar Forma do Anfitrião` está no compêndio:
 
 - `Macros - Bestiario Ordem Paranormal`
 
-Dentro dele existe a macro:
+### Como usar
 
-- `Trocar Forma do Anfitrião`
-
-Como usar:
-
-1. Ative o módulo no mundo.
-2. Abra o compêndio `Macros - Bestiario Ordem Paranormal`.
-3. Arraste a macro `Trocar Forma do Anfitrião` para a hotbar.
-4. Arraste o Anfitrião para a cena.
-5. Selecione o token do Anfitrião.
-6. Execute a macro.
-7. Escolha a forma desejada: Base, Amphitruo, Aeneas, Liber, Plautus ou Silenus.
+1. Abra o compêndio `Macros - Bestiario Ordem Paranormal`.
+2. Arraste `Trocar Forma do Anfitrião` para a hotbar.
+3. Arraste o `Anfitrião` para a cena.
+4. Selecione exatamente 1 token do Anfitrião.
+5. Execute a macro.
+6. Escolha a forma:
+   - Base
+   - Amphitruo
+   - Aeneas
+   - Liber
+   - Plautus
+   - Silenus
 
 A macro altera apenas o token selecionado na cena.
-Ela não altera o Actor original do compêndio.
+Ela não altera o Actor original no compêndio.
+
+## Suporte de formas do Anfitrião
+
+O Anfitrião é importado como um único Actor.
+As formas alternativas ficam em `flags["ordem-bestiario"].tokenVariants`.
