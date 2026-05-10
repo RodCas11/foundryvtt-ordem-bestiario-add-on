@@ -37,6 +37,12 @@
       "label": "Macros - Bestiario Ordem Paranormal",
       "path": "packs/macros",
       "type": "Macro"
+    },
+    {
+      "name": "tabelas",
+      "label": "Tabelas - Bestiario Ordem Paranormal",
+      "path": "packs/tabelas",
+      "type": "RollTable"
     }
   ]
 }
