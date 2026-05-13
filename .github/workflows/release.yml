@@ -10,6 +10,9 @@ on:
 permissions:
   contents: write
 
+env:
+  FOUNDRY_DRY_RUN: "false"
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -46,6 +49,7 @@ jobs:
           fi
 
           echo "MODULE_ID=$MODULE_ID" >> "$GITHUB_ENV"
+          echo "MODULE_VERSION=$MODULE_VERSION" >> "$GITHUB_ENV"
 
       - name: Build release zip
         shell: bash
@@ -79,3 +83,69 @@ jobs:
           files: |
             module.json
             dist/ordem-bestiario.zip
+
+      - name: Publish release to Foundry VTT
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          FOUNDRY_RELEASE_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${FOUNDRY_RELEASE_TOKEN:-}" ]]; then
+            echo "FOUNDRY_RELEASE_TOKEN secret is not configured."
+            exit 1
+          fi
+
+          if [[ "${FOUNDRY_DRY_RUN,,}" == "true" ]]; then
+            DRY_RUN="true"
+          else
+            DRY_RUN="false"
+          fi
+
+          MINIMUM="$(jq -r '.compatibility.minimum // ""' module.json)"
+          VERIFIED="$(jq -r '.compatibility.verified // ""' module.json)"
+          MAXIMUM="$(jq -r '.compatibility.maximum // ""' module.json)"
+          MANIFEST_URL="https://github.com/RodCas11/foundryvtt-ordem-bestiario-add-on/releases/download/${GITHUB_REF_NAME}/module.json"
+          NOTES_URL="https://github.com/RodCas11/foundryvtt-ordem-bestiario-add-on/releases/tag/${GITHUB_REF_NAME}"
+
+          jq -n \
+            --arg id "$MODULE_ID" \
+            --arg version "$MODULE_VERSION" \
+            --arg manifest "$MANIFEST_URL" \
+            --arg notes "$NOTES_URL" \
+            --arg minimum "$MINIMUM" \
+            --arg verified "$VERIFIED" \
+            --arg maximum "$MAXIMUM" \
+            --argjson dryRun "$DRY_RUN" \
+            '{
+              id: $id,
+              "dry-run": $dryRun,
+              release: {
+                version: $version,
+                manifest: $manifest,
+                notes: $notes,
+                compatibility: {
+                  minimum: $minimum,
+                  verified: $verified,
+                  maximum: $maximum
+                }
+              }
+            }' > foundry-release-payload.json
+
+          HTTP_STATUS="$(
+            curl --silent --show-error --output foundry-release-response.json --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: ${FOUNDRY_RELEASE_TOKEN}" \
+              --data @foundry-release-payload.json \
+              https://foundryvtt.com/_api/packages/release_version/
+          )"
+
+          if [[ "$HTTP_STATUS" != "200" ]]; then
+            echo "Foundry VTT Package Release API returned HTTP $HTTP_STATUS."
+            cat foundry-release-response.json
+            exit 1
+          fi
+
+          echo "Foundry VTT release registration succeeded for $MODULE_ID $MODULE_VERSION."

@@ -28,6 +28,25 @@ git tag: v1.0.0
 3. Crie uma tag `vX.Y.Z` igual a versao do `module.json`.
 4. Faca push da tag.
 5. A GitHub Action gera a release automaticamente com `module.json` e `ordem-bestiario.zip`.
+6. Depois de criar a GitHub Release, a Action registra a nova versao na API de pacotes do Foundry VTT.
+
+## Publicação no Foundry VTT Package Registry
+
+Para publicar automaticamente no Foundry VTT Package Registry, crie um GitHub Secret chamado `FOUNDRY_RELEASE_TOKEN` com o token da API de release do Foundry.
+
+Esse token so fica disponivel depois que o pacote ja foi cadastrado e aprovado no Foundry VTT.
+
+Cada nova tag `vX.Y.Z` deve bater com a versao `X.Y.Z` do `module.json`. Ao enviar a tag, o workflow cria a GitHub Release, anexa `module.json` e `ordem-bestiario.zip`, e registra a nova versao no Foundry.
+
+A URL de manifesto enviada para o Foundry aponta para uma release especifica:
+
+```text
+https://github.com/RodCas11/foundryvtt-ordem-bestiario-add-on/releases/download/vX.Y.Z/module.json
+```
+
+Nao use `releases/latest` para registrar uma versao no Foundry; `latest` deve ser usado apenas como URL de instalacao manual no Foundry.
+
+Para testar a chamada sem publicar de verdade, altere a variavel `FOUNDRY_DRY_RUN` do workflow para `true`.
 
 ## Contribuição
 
