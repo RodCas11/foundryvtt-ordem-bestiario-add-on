@@ -2,6 +2,32 @@
 
 Modulo/add-on de compendio de ameacas para Foundry VTT v14 no sistema ordemparanormal.
 
+## Instalação
+
+Use esta URL de manifesto para instalar o modulo no Foundry VTT:
+
+```text
+https://github.com/RodCas11/foundryvtt-ordem-bestiario-add-on/releases/latest/download/module.json
+```
+
+Este modulo requer Foundry VTT v14.
+
+Este modulo depende do sistema `ordemparanormal`, conforme declarado no `module.json`.
+
+As releases devem manter a versao do `module.json` igual a tag Git:
+
+```text
+module.json version: 1.0.0
+git tag: v1.0.0
+```
+
+## Como publicar nova versão
+
+1. Edite o campo `version` no `module.json`.
+2. Faca commit da alteracao.
+3. Crie uma tag `vX.Y.Z` igual a versao do `module.json`.
+4. Faca push da tag.
+5. A GitHub Action gera a release automaticamente com `module.json` e `ordem-bestiario.zip`.
 
 ## Contribuição
 
